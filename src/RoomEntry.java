@@ -17,7 +17,16 @@ public class RoomEntry {
 
         return false;
     }
+
 */
+
+    public ArrayList<RoomEntry> getOtherPos() {
+        return otherPos;
+    }
+
+    public int getID(){
+        return index;
+    }
 
     public boolean add(RoomEntry re){
         if(otherPos.size()>=MAX_ROOMS){
@@ -25,6 +34,10 @@ public class RoomEntry {
         }
         otherPos.add(re);
         return true;
+    }
+
+    public String toSting(){
+        return ""+index;
     }
 
 

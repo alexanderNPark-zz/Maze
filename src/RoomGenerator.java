@@ -1,6 +1,10 @@
+import java.util.Queue;
+import java.util.Stack;
+
 public class RoomGenerator {
 
     private RoomEntry[][] maze;
+    private RoomEntry enter,exit;
     private QuickUnion unionS;
 
     private int dimensionN;
@@ -14,7 +18,8 @@ public class RoomGenerator {
         for(int i=0;i<n;i++)
             for(int j=0;j<n;j++)
                 maze[i][j] = new RoomEntry(n*i+j);
-
+        enter = maze[0][0];
+        exit = maze[dimensionN-1][dimensionN-1];
 
 
     }
@@ -28,6 +33,59 @@ public class RoomGenerator {
             unionS.join(rand,other);
             buildPathInMaze(rand,other);
         }
+    }
+
+
+    public void depthFirstSearch(){
+
+        boolean[] visted = new boolean[total];
+        Stack<RoomEntry> rooms = new Stack<RoomEntry>();
+        RoomEntry currentRoom = enter;
+        visted[currentRoom.getID()] = true;
+        rooms.push(currentRoom);
+        while(rooms.size()>0){
+            currentRoom = rooms.pop();
+            if(currentRoom.getID()==exit.getID()){
+                break;
+            }
+            for(int i=0;i<currentRoom.getOtherPos().size();i++){
+                RoomEntry child = currentRoom.getOtherPos().get(i);
+                if(!visted[child.getID()]){
+                    rooms.push(child);
+                    visted[child.getID()] = true;
+                }
+
+            }
+        }
+
+
+
+    }
+
+    public void breadthFirstSearch(){
+
+        boolean[] visted = new boolean[total];
+        MyQueue<RoomEntry> rooms = new MyQueue<RoomEntry>();
+        RoomEntry currentRoom = enter;
+        visted[currentRoom.getID()] = true;
+        rooms.enqueue(currentRoom);
+        while(rooms.size()>0){
+            currentRoom = rooms.dequeue();
+            if(currentRoom.getID()==exit.getID()){
+                break;
+            }
+            for(int i=0;i<currentRoom.getOtherPos().size();i++){
+                RoomEntry child = currentRoom.getOtherPos().get(i);
+                if(!visted[child.getID()]){
+                    rooms.enqueue(child);
+                    visted[child.getID()] = true;
+                }
+
+            }
+        }
+
+
+
     }
 
 
