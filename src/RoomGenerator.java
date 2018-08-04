@@ -1,10 +1,10 @@
 public class RoomGenerator {
 
-    RoomEntry[][] maze;
-    QuickUnion unionS;
+    private RoomEntry[][] maze;
+    private QuickUnion unionS;
 
-    int dimensionN;
-    int total;
+    private int dimensionN;
+    private int total;
 
     public RoomGenerator(int n){
         dimensionN = n;
@@ -21,16 +21,20 @@ public class RoomGenerator {
 
     public void buildMaze(){
         int rand = 0;
+        int other = 0;
         while(!unionS.isConnected(0,24)){
             rand  = (int)Math.random()*total;
-            unionS.join(rand,randomAdjacentRoom(rand));
-
-
+            other = randomAdjacentRoom(rand);
+            unionS.join(rand,other);
+            buildPathInMaze(rand,other);
         }
     }
 
+
+
     public void buildPathInMaze(int room, int joiningRoom){
-        room
+        maze[room/dimensionN][room%dimensionN].add(maze[joiningRoom/dimensionN][joiningRoom%dimensionN]);
+        maze[joiningRoom/dimensionN][joiningRoom%dimensionN].add(maze[room/dimensionN][room%dimensionN]);
     }
 
     public int randomAdjacentRoom(int currentRoom){

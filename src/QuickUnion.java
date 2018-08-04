@@ -11,11 +11,11 @@ public class QuickUnion {
 
     public int find(int n){
         Stack<Integer> stack = new Stack<Integer>();
-        while(!(disjointSet[n]<=0)){
+        while(!(disjointSet[n]<0)){
             stack.push(n);
             n=disjointSet[n];
         }
-        while(stack.size()>=0){
+        while(stack.size()>0){
             disjointSet[stack.pop()] = n;
         }
         return n;
@@ -40,6 +40,14 @@ public class QuickUnion {
 
     public boolean isConnected(int v1, int v2){
          return find(v1) == find(v2);
+    }
+
+    public boolean countDoFullCount(int parent){
+        for(int i=0;i<disjointSet.length;i++)
+            if(parent!=find(i))return false;
+        return true;
+
+
     }
 
 }
