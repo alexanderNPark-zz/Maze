@@ -2,6 +2,18 @@ import java.util.Stack;
 
 public class MyQueue<T> {
 
+    public static void main(String [] arg){
+        MyQueue<Integer> nums = new MyQueue<Integer>();
+        for(int i=0;i<10;i++){
+            nums.enqueue(i);
+        }
+        System.out.println(nums.size());
+        while(nums.size()>0){
+
+            System.out.println(nums.dequeue());
+        }
+    }
+
     private class Node<T>{
         private T data;
         private Node<T> next;
@@ -68,4 +80,6 @@ public class MyQueue<T> {
     public int size(){
         return size;
     }
+
+
 }

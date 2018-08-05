@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -9,6 +11,7 @@ public class RoomGenerator {
 
     private int dimensionN;
     private int total;
+    private RoomEntry[] dfs,bfs;
 
     public RoomGenerator(int n){
         dimensionN = n;
@@ -18,11 +21,46 @@ public class RoomGenerator {
         for(int i=0;i<n;i++)
             for(int j=0;j<n;j++)
                 maze[i][j] = new RoomEntry(n*i+j);
+
         enter = maze[0][0];
         exit = maze[dimensionN-1][dimensionN-1];
 
 
     }
+
+
+    public void printPath(){
+        int index=bfs.length-1;
+
+        for(int i=0;i<dimensionN;i++){
+            for(int j=0; j<dimensionN;j++){
+                if(index>=0 && bfs[index].getID()==dimensionN*i+j){
+                    System.out.print("X");
+                    index--;
+                }
+                else{
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+
+        System.out.println("_______________________");
+        index = dfs.length-1;
+        for(int i=0;i<dimensionN;i++){
+            for(int j=0; j<dimensionN;j++){
+                if(dfs[index].getID()==dimensionN*i+j){
+                    System.out.print("X");
+                    index--;
+                }
+                else{
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+    }
+
 
     public void buildMaze(){
         int rand = 0;
@@ -43,6 +81,10 @@ public class RoomGenerator {
         RoomEntry currentRoom = enter;
         visted[currentRoom.getID()] = true;
         rooms.push(currentRoom);
+
+        HashMap<RoomEntry,RoomEntry> parent = new HashMap<RoomEntry,RoomEntry>();
+        parent.put(currentRoom,currentRoom);
+
         while(rooms.size()>0){
             currentRoom = rooms.pop();
             if(currentRoom.getID()==exit.getID()){
@@ -53,12 +95,19 @@ public class RoomGenerator {
                 if(!visted[child.getID()]){
                     rooms.push(child);
                     visted[child.getID()] = true;
+                    parent.put(child,currentRoom);
                 }
 
             }
         }
 
-
+        ArrayList<RoomEntry> pathReverse = new ArrayList<RoomEntry>();
+        pathReverse.add(currentRoom);
+        while(currentRoom!=enter){
+            currentRoom=parent.get(currentRoom);
+            pathReverse.add(currentRoom);
+        }
+        dfs = (RoomEntry[]) pathReverse.toArray();
 
     }
 
@@ -66,11 +115,15 @@ public class RoomGenerator {
 
         boolean[] visted = new boolean[total];
         MyQueue<RoomEntry> rooms = new MyQueue<RoomEntry>();
+        Stack<RoomEntry> path = new Stack<RoomEntry>();
+
         RoomEntry currentRoom = enter;
         visted[currentRoom.getID()] = true;
         rooms.enqueue(currentRoom);
+
         while(rooms.size()>0){
             currentRoom = rooms.dequeue();
+            path.push(currentRoom);
             if(currentRoom.getID()==exit.getID()){
                 break;
             }
@@ -83,14 +136,16 @@ public class RoomGenerator {
 
             }
         }
-
-
+        bfs = (RoomEntry[]) path.toArray();
 
     }
 
 
 
     public void buildPathInMaze(int room, int joiningRoom){
+        /**
+         * Builds physical path through maze once disjoint activates
+         */
         maze[room/dimensionN][room%dimensionN].add(maze[joiningRoom/dimensionN][joiningRoom%dimensionN]);
         maze[joiningRoom/dimensionN][joiningRoom%dimensionN].add(maze[room/dimensionN][room%dimensionN]);
     }
