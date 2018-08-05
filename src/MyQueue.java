@@ -8,6 +8,13 @@ public class MyQueue<T> {
             nums.enqueue(i);
         }
         System.out.println(nums.size());
+        nums.dequeue();
+        nums.enqueue(1000);
+        while(nums.size()>0){
+
+            System.out.println(nums.dequeue());
+        }
+        nums.enqueue(100);
         while(nums.size()>0){
 
             System.out.println(nums.dequeue());
@@ -42,6 +49,7 @@ public class MyQueue<T> {
     private Node<T> sentinalHead=new Node<>(null);
     private Node<T> tail;
     private Stack<Node<T>> deadlinks = new Stack<Node<T>>();
+
     private int size;
 
     public MyQueue(){
@@ -55,6 +63,7 @@ public class MyQueue<T> {
         }else{
             temp = deadlinks.pop();
             temp.setData(data);
+            temp.setNext(null);
         }
 
         tail.setNext(temp);
@@ -63,15 +72,17 @@ public class MyQueue<T> {
     }
 
     public T dequeue(){
-        if(size<=0){
-            tail = sentinalHead;
-            return null;
-        }
+       if(size==0){
+           return null;
+       }
         Node<T> temp = sentinalHead.getNext();
         sentinalHead.setNext(temp.getNext());
         T data = temp.getData();
         deadlinks.push(temp);
         size--;
+        if(sentinalHead.getNext()==null){
+            tail = sentinalHead;
+        }
 
         return data;
 

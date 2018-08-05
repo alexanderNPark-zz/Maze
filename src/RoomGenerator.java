@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Queue;
+
 import java.util.Stack;
 
 public class RoomGenerator {
@@ -12,6 +12,16 @@ public class RoomGenerator {
     private int dimensionN;
     private int total;
     private RoomEntry[] dfs,bfs;
+
+    public static void main(String[] arg){
+        int testInput =5;
+        RoomGenerator rgen = new RoomGenerator(testInput);
+        rgen.buildMaze();
+        rgen.depthFirstSearch();
+        System.out.println("______________________");
+        rgen.breadthFirstSearch();
+        rgen.printPath();
+    }
 
     public RoomGenerator(int n){
         dimensionN = n;
@@ -30,31 +40,31 @@ public class RoomGenerator {
 
 
     public void printPath(){
-        int index=bfs.length-1;
+        int index=0;
 
         for(int i=0;i<dimensionN;i++){
             for(int j=0; j<dimensionN;j++){
-                if(index>=0 && bfs[index].getID()==dimensionN*i+j){
-                    System.out.print("X");
-                    index--;
+                if(bfs[index].getID()==dimensionN*i+j){
+                    System.out.print("X ");
+                    index++;
                 }
                 else{
-                    System.out.print(" ");
+                    System.out.print("  ");
                 }
             }
             System.out.println();
         }
 
         System.out.println("_______________________");
-        index = dfs.length-1;
+        index = 0;
         for(int i=0;i<dimensionN;i++){
             for(int j=0; j<dimensionN;j++){
                 if(dfs[index].getID()==dimensionN*i+j){
-                    System.out.print("X");
-                    index--;
+                    System.out.print("X ");
+                    index++;
                 }
                 else{
-                    System.out.print(" ");
+                    System.out.print("  ");
                 }
             }
             System.out.println();
@@ -65,11 +75,15 @@ public class RoomGenerator {
     public void buildMaze(){
         int rand = 0;
         int other = 0;
-        while(!unionS.isConnected(0,24)){
-            rand  = (int)Math.random()*total;
+        while(!unionS.isConnected(enter.getID(),exit.getID())){
+            rand  = (int)(Math.random()*total);
             other = randomAdjacentRoom(rand);
-            unionS.join(rand,other);
-            buildPathInMaze(rand,other);
+            //System.out.println(rand+","+other);
+            if(unionS.find(rand)!=unionS.find(other)){
+                unionS.join(rand,other);
+                buildPathInMaze(rand,other);
+            }
+
         }
     }
 
@@ -82,8 +96,8 @@ public class RoomGenerator {
         visted[currentRoom.getID()] = true;
         rooms.push(currentRoom);
 
-        HashMap<RoomEntry,RoomEntry> parent = new HashMap<RoomEntry,RoomEntry>();
-        parent.put(currentRoom,currentRoom);
+        HashMap<Integer,RoomEntry> parent = new HashMap<Integer, RoomEntry>();
+
 
         while(rooms.size()>0){
             currentRoom = rooms.pop();
@@ -95,7 +109,7 @@ public class RoomGenerator {
                 if(!visted[child.getID()]){
                     rooms.push(child);
                     visted[child.getID()] = true;
-                    parent.put(child,currentRoom);
+                    parent.put(child.getID(),currentRoom);
                 }
 
             }
@@ -104,10 +118,17 @@ public class RoomGenerator {
         ArrayList<RoomEntry> pathReverse = new ArrayList<RoomEntry>();
         pathReverse.add(currentRoom);
         while(currentRoom!=enter){
-            currentRoom=parent.get(currentRoom);
+            currentRoom=parent.get(currentRoom.getID());
             pathReverse.add(currentRoom);
         }
-        dfs = (RoomEntry[]) pathReverse.toArray();
+        dfs = new RoomEntry[pathReverse.size()];
+        dfs = pathReverse.toArray(dfs);
+        //test code
+        System.out.println("DFS:");
+        quickSort(dfs,0,dfs.length-1);
+        for(int i=0;i<dfs.length;i++){
+            System.out.println(dfs[i]);
+        }
 
     }
 
@@ -115,7 +136,9 @@ public class RoomGenerator {
 
         boolean[] visted = new boolean[total];
         MyQueue<RoomEntry> rooms = new MyQueue<RoomEntry>();
-        Stack<RoomEntry> path = new Stack<RoomEntry>();
+
+
+        HashMap<Integer,RoomEntry> parent = new HashMap<Integer, RoomEntry>();
 
         RoomEntry currentRoom = enter;
         visted[currentRoom.getID()] = true;
@@ -123,7 +146,7 @@ public class RoomGenerator {
 
         while(rooms.size()>0){
             currentRoom = rooms.dequeue();
-            path.push(currentRoom);
+
             if(currentRoom.getID()==exit.getID()){
                 break;
             }
@@ -132,11 +155,27 @@ public class RoomGenerator {
                 if(!visted[child.getID()]){
                     rooms.enqueue(child);
                     visted[child.getID()] = true;
+                    parent.put(child.getID(),currentRoom);
                 }
 
             }
         }
-        bfs = (RoomEntry[]) path.toArray();
+
+        ArrayList<RoomEntry> pathReverse = new ArrayList<RoomEntry>();
+        pathReverse.add(currentRoom);
+        while(currentRoom!=enter){
+            currentRoom=parent.get(currentRoom.getID());
+            pathReverse.add(currentRoom);
+        }
+        bfs = new RoomEntry[pathReverse.size()];
+        bfs = pathReverse.toArray(bfs);
+        //test code
+        System.out.println("BFS:");
+        quickSort(bfs,0,bfs.length-1);
+        for(int i=0;i<bfs.length;i++){
+            System.out.println(bfs[i]);
+        }
+
 
     }
 
@@ -162,28 +201,60 @@ public class RoomGenerator {
                         currentRoom-=1;
                         legit=true;
                     }
+                    break;
                 case 1:
                     if((currentRoom%dimensionN)+1>=dimensionN)break;
                     else{
                         currentRoom+=1;
                         legit=true;
                     }
+                    break;
                 case 2:
                     if(currentRoom+dimensionN>=total)break;
                     else{
                         currentRoom+=dimensionN;
                         legit=true;
                     }
+                    break;
                 case 3:
                     if(currentRoom-dimensionN<0)break;
                     else{
                         currentRoom-=dimensionN;
                         legit=true;
                     }
+                    break;
 
             }
         }
         return currentRoom;
+
+    }
+
+    public void quickSort(RoomEntry[] array, int start, int end){
+        if(start>=end){
+            return;
+        }
+        int endPointer=end;
+        int beginPointer = start;
+        int pivotIndex = start+(end-start)/2;
+
+        while(endPointer>beginPointer){
+            while(endPointer>beginPointer && array[endPointer].compareTo(array[pivotIndex])>=0) endPointer--;
+            while(endPointer>beginPointer && array[beginPointer].compareTo(array[pivotIndex])<0) beginPointer++;
+            if(endPointer>beginPointer){
+                RoomEntry temp = array[endPointer];
+                array[endPointer] = array[beginPointer];
+                array[beginPointer] = temp;
+                beginPointer++;
+                endPointer--;
+            }
+        }
+
+
+
+        quickSort(array,start,endPointer-1);
+        quickSort(array,beginPointer,end);
+
 
     }
 
