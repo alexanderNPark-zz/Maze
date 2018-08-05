@@ -14,13 +14,13 @@ public class RoomGenerator {
     private RoomEntry[] dfs,bfs;
 
     public static void main(String[] arg){
-        int testInput =5;
+        int testInput = 20;
         RoomGenerator rgen = new RoomGenerator(testInput);
         rgen.buildMaze();
         rgen.depthFirstSearch();
-        System.out.println("______________________");
+        rgen.printDFS();
         rgen.breadthFirstSearch();
-        rgen.printPath();
+        rgen.printBFS();
     }
 
     public RoomGenerator(int n){
@@ -39,12 +39,11 @@ public class RoomGenerator {
     }
 
 
-    public void printPath(){
-        int index=0;
-
+    public void printDFS(){
+        int index = 0;
         for(int i=0;i<dimensionN;i++){
             for(int j=0; j<dimensionN;j++){
-                if(bfs[index].getID()==dimensionN*i+j){
+                if(dfs[index].getID()==dimensionN*i+j){
                     System.out.print("X ");
                     index++;
                 }
@@ -54,12 +53,14 @@ public class RoomGenerator {
             }
             System.out.println();
         }
+    }
 
-        System.out.println("_______________________");
-        index = 0;
+    public void printBFS(){
+        int index=0;
+
         for(int i=0;i<dimensionN;i++){
             for(int j=0; j<dimensionN;j++){
-                if(dfs[index].getID()==dimensionN*i+j){
+                if(bfs[index].getID()==dimensionN*i+j){
                     System.out.print("X ");
                     index++;
                 }
@@ -96,11 +97,14 @@ public class RoomGenerator {
         visted[currentRoom.getID()] = true;
         rooms.push(currentRoom);
 
+        CustomLinkedList cll = new CustomLinkedList();
+        cll.add(currentRoom);
         HashMap<Integer,RoomEntry> parent = new HashMap<Integer, RoomEntry>();
 
 
         while(rooms.size()>0){
             currentRoom = rooms.pop();
+
             if(currentRoom.getID()==exit.getID()){
                 break;
             }
@@ -110,6 +114,7 @@ public class RoomGenerator {
                     rooms.push(child);
                     visted[child.getID()] = true;
                     parent.put(child.getID(),currentRoom);
+                    cll.add(child);
                 }
 
             }
@@ -124,12 +129,15 @@ public class RoomGenerator {
         dfs = new RoomEntry[pathReverse.size()];
         dfs = pathReverse.toArray(dfs);
         //test code
-        System.out.println("DFS:");
-        quickSort(dfs,0,dfs.length-1);
-        for(int i=0;i<dfs.length;i++){
-            System.out.println(dfs[i]);
-        }
+        System.out.println("Nodes visited:");
+        cll.printList();
 
+        System.out.println("DFS Path:");
+
+        for(int i=0;i<dfs.length;i++){
+            System.out.print(dfs[i].toString()+" ");
+        }
+        quickSort(dfs,0,dfs.length-1);
     }
 
     public void breadthFirstSearch(){
@@ -139,9 +147,11 @@ public class RoomGenerator {
 
 
         HashMap<Integer,RoomEntry> parent = new HashMap<Integer, RoomEntry>();
+        CustomLinkedList cll = new CustomLinkedList();
 
         RoomEntry currentRoom = enter;
         visted[currentRoom.getID()] = true;
+        cll.add(currentRoom);
         rooms.enqueue(currentRoom);
 
         while(rooms.size()>0){
@@ -156,6 +166,7 @@ public class RoomGenerator {
                     rooms.enqueue(child);
                     visted[child.getID()] = true;
                     parent.put(child.getID(),currentRoom);
+                    cll.add(child);
                 }
 
             }
@@ -170,12 +181,16 @@ public class RoomGenerator {
         bfs = new RoomEntry[pathReverse.size()];
         bfs = pathReverse.toArray(bfs);
         //test code
-        System.out.println("BFS:");
-        quickSort(bfs,0,bfs.length-1);
-        for(int i=0;i<bfs.length;i++){
-            System.out.println(bfs[i]);
-        }
 
+        System.out.println("Nodes visited:");
+        cll.printList();
+
+        System.out.println("BFS Path:");
+        for(int i=0;i<bfs.length;i++){
+            System.out.print(bfs[i].toString()+" ");
+        }
+        System.out.println();
+        quickSort(bfs,0,bfs.length-1);
 
     }
 
@@ -236,12 +251,13 @@ public class RoomGenerator {
         }
         int endPointer=end;
         int beginPointer = start;
-        int pivotIndex = start+(end-start)/2;
+        RoomEntry pivot = array[start+(end-start)/2];
 
-        while(endPointer>beginPointer){
-            while(endPointer>beginPointer && array[endPointer].compareTo(array[pivotIndex])>=0) endPointer--;
-            while(endPointer>beginPointer && array[beginPointer].compareTo(array[pivotIndex])<0) beginPointer++;
-            if(endPointer>beginPointer){
+
+        while(endPointer>=beginPointer){
+            while(endPointer>=beginPointer && array[endPointer].compareTo(pivot)>0) endPointer--;
+            while(endPointer>=beginPointer && array[beginPointer].compareTo(pivot)<0) beginPointer++;
+            if(endPointer>=beginPointer){
                 RoomEntry temp = array[endPointer];
                 array[endPointer] = array[beginPointer];
                 array[beginPointer] = temp;
@@ -251,8 +267,7 @@ public class RoomGenerator {
         }
 
 
-
-        quickSort(array,start,endPointer-1);
+        quickSort(array,start,endPointer);
         quickSort(array,beginPointer,end);
 
 

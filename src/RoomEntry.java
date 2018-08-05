@@ -37,11 +37,13 @@ public class RoomEntry implements Comparable<RoomEntry>{
     }
 
     public String toString(){
+        /*
         String childs = "(";
         for(int i=0; i<otherPos.size();i++){
             childs+=otherPos.get(i).getID()+", ";
         }
-        return ""+index+":"+childs+")";
+        */
+        return ""+index;
     }
 
 
