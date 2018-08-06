@@ -42,7 +42,8 @@ public class QuickUnion {
          return find(v1) == find(v2);
     }
 
-    public boolean countDoFullCount(int parent){
+    public boolean countDoFullCount(int head){
+        int parent = find(head);
         for(int i=0;i<disjointSet.length;i++)
             if(parent!=find(i))return false;
         return true;

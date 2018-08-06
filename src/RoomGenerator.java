@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,9 +15,9 @@ public class RoomGenerator {
     private RoomEntry[] dfs,bfs;
 
     public static void main(String[] arg){
-        int testInput = 20;
+        int testInput = 12;
         RoomGenerator rgen = new RoomGenerator(testInput);
-        rgen.buildMaze();
+
         rgen.depthFirstSearch();
         rgen.printDFS();
         rgen.breadthFirstSearch();
@@ -34,10 +35,19 @@ public class RoomGenerator {
 
         enter = maze[0][0];
         exit = maze[dimensionN-1][dimensionN-1];
-
+        buildMaze();
 
     }
 
+
+    public RoomGenerator(String fileName){
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(fileName))));
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void printDFS(){
         int index = 0;
@@ -137,6 +147,7 @@ public class RoomGenerator {
         for(int i=0;i<dfs.length;i++){
             System.out.print(dfs[i].toString()+" ");
         }
+        System.out.println();
         quickSort(dfs,0,dfs.length-1);
     }
 
