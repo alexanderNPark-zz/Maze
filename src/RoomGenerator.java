@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import java.util.Scanner;
 import java.util.Stack;
 
 public class RoomGenerator {
@@ -14,27 +15,43 @@ public class RoomGenerator {
     private int total;
     private RoomEntry[] dfs,bfs;
 
+    private HashMap<Integer, Integer> roomOrientation = new HashMap<Integer, Integer>(4);
     public static void main(String[] arg){
-        int testInput = 12;
-        RoomGenerator rgen = new RoomGenerator(testInput);
+
+
+        RoomGenerator rgen = null;
+        if(arg.length==0){
+            Scanner s = new Scanner(System.in);
+            System.out.println("Enter square maze dimension:");
+            rgen = new RoomGenerator(s.nextInt());
+        }
+        else{
+            rgen = new RoomGenerator(arg[0]);
+        }
+
+        rgen.breadthFirstSearch();
+        rgen.printBFS();
 
         rgen.depthFirstSearch();
         rgen.printDFS();
-        rgen.breadthFirstSearch();
-        rgen.printBFS();
+
     }
+
 
     public RoomGenerator(int n){
         dimensionN = n;
         maze = new RoomEntry[dimensionN][dimensionN];
-        unionS = new QuickUnion(n*n);
         total = dimensionN*dimensionN;
-        for(int i=0;i<n;i++)
-            for(int j=0;j<n;j++)
-                maze[i][j] = new RoomEntry(n*i+j);
+        unionS = new QuickUnion(total);
+
+        for(int i=0;i<dimensionN;i++)
+            for(int j=0;j<dimensionN;j++)
+                maze[i][j] = new RoomEntry(dimensionN*i+j,dimensionN);
 
         enter = maze[0][0];
+        enter.outOfRange(-dimensionN);
         exit = maze[dimensionN-1][dimensionN-1];
+        exit.outOfRange(total-1+dimensionN);
         buildMaze();
 
     }
@@ -43,10 +60,58 @@ public class RoomGenerator {
     public RoomGenerator(String fileName){
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(fileName))));
+            String line = br.readLine();//dimension reading
+            dimensionN = Integer.parseInt(line);
+            maze = new RoomEntry[dimensionN][dimensionN];
+            for(int i=0;i<dimensionN;i++)
+                for(int j=0;j<dimensionN;j++)
+                    maze[i][j] = new RoomEntry(dimensionN*i+j,dimensionN);
+            total = dimensionN*dimensionN;
+            unionS = new QuickUnion(total);
 
-        } catch (FileNotFoundException e) {
+            enter = maze[0][0];
+            exit = maze[dimensionN-1][dimensionN-1];
+
+            roomOrientation.put(0,-dimensionN);
+            roomOrientation.put(1,dimensionN);
+            roomOrientation.put(2,1);
+            roomOrientation.put(3,-1);
+
+
+            int current =0;
+            while(current<total && (line=br.readLine())!=null){
+                //System.out.println(current+" "+ line);
+                generateRoomsIndexFromString(current,line.split(" "));
+                current++;
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void generateRoomsIndexFromString(int current, String[] tokens){
+
+        int newI = 0;
+        RoomEntry currentRoom = maze[current/dimensionN][current%dimensionN];
+
+        for(int i=0;i<tokens.length;i++){
+
+            if(Integer.parseInt(tokens[i])==0){
+                newI = current+roomOrientation.get(i);
+                if(newI>=0 && newI<total){
+                    currentRoom.add(maze[newI/dimensionN][newI%dimensionN]);
+                }
+                else{
+                    currentRoom.outOfRange(newI);
+                }
+            }
+        }
+
+    }
+
+    public void printPhysicalMaze(){
+
     }
 
     public void printDFS(){
@@ -108,13 +173,13 @@ public class RoomGenerator {
         rooms.push(currentRoom);
 
         CustomLinkedList cll = new CustomLinkedList();
-        cll.add(currentRoom);
+        //cll.add(currentRoom);
         HashMap<Integer,RoomEntry> parent = new HashMap<Integer, RoomEntry>();
 
 
         while(rooms.size()>0){
             currentRoom = rooms.pop();
-
+            cll.add(currentRoom);
             if(currentRoom.getID()==exit.getID()){
                 break;
             }
@@ -124,7 +189,7 @@ public class RoomGenerator {
                     rooms.push(child);
                     visted[child.getID()] = true;
                     parent.put(child.getID(),currentRoom);
-                    cll.add(child);
+
                 }
 
             }
@@ -139,7 +204,7 @@ public class RoomGenerator {
         dfs = new RoomEntry[pathReverse.size()];
         dfs = pathReverse.toArray(dfs);
         //test code
-        System.out.println("Nodes visited:");
+        System.out.println("DFS Nodes visited:");
         cll.printList();
 
         System.out.println("DFS Path:");
@@ -167,7 +232,7 @@ public class RoomGenerator {
 
         while(rooms.size()>0){
             currentRoom = rooms.dequeue();
-
+            cll.add(currentRoom);
             if(currentRoom.getID()==exit.getID()){
                 break;
             }
@@ -177,7 +242,7 @@ public class RoomGenerator {
                     rooms.enqueue(child);
                     visted[child.getID()] = true;
                     parent.put(child.getID(),currentRoom);
-                    cll.add(child);
+
                 }
 
             }
@@ -193,7 +258,7 @@ public class RoomGenerator {
         bfs = pathReverse.toArray(bfs);
         //test code
 
-        System.out.println("Nodes visited:");
+        System.out.println("BFS Nodes visited:");
         cll.printList();
 
         System.out.println("BFS Path:");
@@ -219,7 +284,8 @@ public class RoomGenerator {
         boolean legit=false;
         int action = 0;
         while(!legit){
-            action =(int)(Math.random()*4);
+            action = (int)(Math.random()*4);
+
             switch(action){
                 case 0:
                     if((currentRoom%dimensionN)-1<0)break;
@@ -251,6 +317,7 @@ public class RoomGenerator {
                     break;
 
             }
+
         }
         return currentRoom;
 
