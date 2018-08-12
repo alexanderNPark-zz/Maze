@@ -111,40 +111,7 @@ public class RoomGenerator {
 
     }
 
-    public void printPhysicalMaze() {
-        try {
-            PrintWriter pw = new PrintWriter(new FileOutputStream(new File("drawnMaze.txt")));
-            for (int i = 0; i < dimensionN; i++) {
-                for (int j = 0; j < dimensionN; j++) {
-                    if (!maze[i][j].NORTH_OPEN) {
-                        pw.printf("%2s","__");
-                    }
 
-                    pw.print("  ");
-
-                }
-                pw.println();
-                for (int j = 0; j < dimensionN; j++) {
-                    if (!maze[i][j].EAST_OPEN) {
-                        pw.printf("%s","|");
-                    }
-
-                    pw.print("  ");
-
-                }
-                if (!maze[i][dimensionN - 1].WEST_OPEN) {
-                    pw.printf("%s","|");
-                    System.out.println("TRUE");
-                }
-                pw.println();
-            }
-            pw.flush();
-            pw.close();
-        } catch (Exception e) {
-            System.out.println("err");
-        }
-
-    }
 
     public void printDFS() {
         int index = 0;
