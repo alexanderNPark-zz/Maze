@@ -1,14 +1,14 @@
 To run this program is very simple:
 The main class is RoomGenerator.
 You have two options.
-Running RoomGenerator with no arguements prompts you for a dimension number.
+Running RoomGenerator with no arguments prompts you for a dimension number.
 Entering in the number(n) generates a random maze n x n via GUI.
-The maze will not only be drawn, but also a path to it will be shown.
+The maze will not only be drawn, but also a path to it will be shown if you enter a key into the console after the maze is drawn.
 In the console, details will be printed via DFS and BFS node paths.
 
 The second is running RoomGenerator with one argument which is the name of a file.
 A test file was given and a maze will be GUI generated and the path will be printed also.
-Details will also be released in console.
+Details will also be released in console. Same rules apply like the no arguments part.
 
 This maze guarantees that there is a path and only one opening in the exit door.
 It also promises that all rooms can be accessed in path.

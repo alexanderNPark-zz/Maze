@@ -10,6 +10,7 @@ public class RoomEntry implements Comparable<RoomEntry>{
     private boolean[] openDoorsForDrawing = new boolean[MAX_ROOMS];
     private int dimensionN;
     private boolean partOfPath = false;
+    public static boolean wantTOBeShown = false;
 
 
     public boolean NORTH_OPEN=false,SOUTH_OPEN=false,EAST_OPEN=false,WEST_OPEN = false;
@@ -123,7 +124,7 @@ public class RoomEntry implements Comparable<RoomEntry>{
         if(!WEST_OPEN){
             g.drawLine(startPoint+offset*(index%dimensionN),startPoint+offset*(index/dimensionN), startPoint+offset*(index%dimensionN), startPoint+offset*(index/dimensionN)+offset);
         }
-        if(partOfPath){
+        if(partOfPath && wantTOBeShown){
             g.fillOval(startPoint+offset*(index%dimensionN)+offset/4,startPoint+offset*(index/dimensionN)+offset/4,offset/2,offset/2);
         }
         //g.drawRect(offset+offset*(index/dimensionN),offset+offset*(index%dimensionN),offset,offset);

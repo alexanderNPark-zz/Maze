@@ -27,6 +27,8 @@ public class RoomDrawer extends JPanel {
 
     public void paint(Graphics g){
         Graphics2D canvas = (Graphics2D)g;
+        canvas.setColor(Color.white);
+        canvas.fillRect(0,0,maxFrameLength,maxFrameLength);
         canvas.setColor(Color.RED);
         for(int i=0;i<maze.length;i++){
             for(int j=0;j<maze.length;j++) {
