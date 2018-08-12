@@ -1,10 +1,14 @@
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class QuickUnion {
 
     private int[] disjointSet;
 
+
     public QuickUnion(int n){
+
         disjointSet = new int[n];
         for(int i=0;i<n;i++)disjointSet[i]=-1;
     }
@@ -42,13 +46,8 @@ public class QuickUnion {
          return find(v1) == find(v2);
     }
 
-    public boolean countDoFullCount(int head){
-        int parent = find(head);
-        for(int i=0;i<disjointSet.length;i++)
-            if(parent!=find(i))return false;
-        return true;
 
 
-    }
+
 
 }
