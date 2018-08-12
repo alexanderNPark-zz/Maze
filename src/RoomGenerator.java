@@ -38,7 +38,7 @@ public class RoomGenerator {
         rgen.depthFirstSearch();
         rgen.printDFS();
         RoomDrawer rd = new RoomDrawer(rgen.getMaze());
-        System.out.println("Would you like to see the path printed? Press Any key and hit enter.");
+        System.out.println("Would you like to see the path on the GUI? Press Any key and hit enter.");
         s.next();
         RoomEntry.wantTOBeShown = true;
         rd.repaint();

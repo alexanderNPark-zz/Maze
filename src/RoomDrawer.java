@@ -17,9 +17,9 @@ public class RoomDrawer extends JPanel {
 
         mainFrame = new JFrame();
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.setSize(maxFrameLength+startPoint*2,maxFrameLength+startPoint*2);
+        mainFrame.setSize(maxFrameLength+startPoint*3,maxFrameLength+startPoint*3);
         //panel = new JPanel();
-        setSize(maxFrameLength,maxFrameLength);
+        setSize(maxFrameLength+startPoint*3,maxFrameLength+startPoint*3);
         mainFrame.add(this);
         mainFrame.setVisible(true);
 
@@ -28,7 +28,7 @@ public class RoomDrawer extends JPanel {
     public void paint(Graphics g){
         Graphics2D canvas = (Graphics2D)g;
         canvas.setColor(Color.white);
-        canvas.fillRect(0,0,maxFrameLength,maxFrameLength);
+        canvas.fillRect(0,0,maxFrameLength+startPoint*3,maxFrameLength+startPoint*3);
         canvas.setColor(Color.RED);
         for(int i=0;i<maze.length;i++){
             for(int j=0;j<maze.length;j++) {
