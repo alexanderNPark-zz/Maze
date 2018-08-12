@@ -5,8 +5,8 @@ public class RoomDrawer extends JPanel {
 
     private JFrame mainFrame;
     private JPanel panel;
-    private final int startPoint = 50;
-    private final int roomDimension = 50;
+    private final int startPoint = 25;
+    private final int roomDimension = 25;
     private int maxFrameLength;
     private RoomEntry[][] maze;
 
@@ -16,6 +16,7 @@ public class RoomDrawer extends JPanel {
         maxFrameLength = maze.length*(roomDimension+2);
 
         mainFrame = new JFrame();
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainFrame.setSize(maxFrameLength+startPoint*2,maxFrameLength+startPoint*2);
         //panel = new JPanel();
         setSize(maxFrameLength,maxFrameLength);

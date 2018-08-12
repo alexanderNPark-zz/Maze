@@ -14,6 +14,7 @@ public class RoomGenerator {
     private int dimensionN;
     private int total;
     private RoomEntry[] dfs, bfs;
+    boolean onePath = false;
 
     private HashMap<Integer, Integer> roomOrientation = new HashMap<Integer, Integer>(4);
 
@@ -154,8 +155,17 @@ public class RoomGenerator {
             other = randomAdjacentRoom(rand);
             //System.out.println(rand+","+other);
             if (unionS.find(rand) != unionS.find(other)) {
-                unionS.join(rand, other);
-                buildPathInMaze(rand, other);
+                if(rand==exit.getID() || other==exit.getID()){
+                    if(!onePath){
+                        unionS.join(rand, other);
+                        buildPathInMaze(rand, other);
+                        onePath=!onePath;
+                    }
+                }else{
+                    unionS.join(rand, other);
+                    buildPathInMaze(rand, other);
+                }
+
             }
 
         }
