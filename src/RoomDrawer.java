@@ -10,7 +10,6 @@ public class RoomDrawer extends JPanel {
     private int maxFrameLength;
     private RoomEntry[][] maze;
 
-
     public RoomDrawer(RoomEntry[][] maze){
         this.maze = maze;
         maxFrameLength = maze.length*(roomDimension+2);
@@ -36,7 +35,6 @@ public class RoomDrawer extends JPanel {
                 maze[i][j].draw(canvas, startPoint);
             }
         }
-
 
     }
 }
