@@ -358,6 +358,10 @@ public class RoomGenerator {
     }
 
     public void quickSort(RoomEntry[] array, int start, int end) {
+        /**
+         * Quicksorts using RoomEntry's compareTo method, sorts in increasing order
+         *
+         */
         if (start >= end) {
             return;
         }
