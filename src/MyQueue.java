@@ -1,5 +1,12 @@
 import java.util.Stack;
 
+/**
+ * This class is the Queue class which is an implementation of a simple Queue-linked list
+ * @author Alexander Park
+ * @param <T> the object type parametrized
+ * @version 1.0
+ * @since 8-12-18
+ */
 public class MyQueue<T> {
 
     public static void main(String [] arg){
@@ -21,6 +28,10 @@ public class MyQueue<T> {
         }
     }
 
+    /**
+     * Private internal Node class of the Queue
+     * @param <T> object to be parametrized
+     */
     private class Node<T>{
         private T data;
         private Node<T> next;
@@ -48,7 +59,7 @@ public class MyQueue<T> {
 
     private Node<T> sentinalHead=new Node<>(null);
     private Node<T> tail;
-    private Stack<Node<T>> deadlinks = new Stack<Node<T>>();
+    private Stack<Node<T>> deadlinks = new Stack<Node<T>>(); //recycled nodes that are not garbage collected
 
     private int size;
 
@@ -56,6 +67,10 @@ public class MyQueue<T> {
         tail = sentinalHead;
     }
 
+    /**
+     * Enqueues data into the Queue
+     * @param data the T object that will be added
+     */
     public void enqueue(T data){
         Node<T> temp = null;
         if(deadlinks.size()==0){
@@ -71,6 +86,10 @@ public class MyQueue<T> {
         size++;
     }
 
+    /**
+     * Removes the object in the front of the queue and returns it
+     * @return the object that is in the front of the Queue
+     */
     public T dequeue(){
        if(size==0){
            return null;
@@ -88,6 +107,10 @@ public class MyQueue<T> {
 
     }
 
+    /**
+     * gets the size of the Queue
+     * @return the size of queue
+     */
     public int size(){
         return size;
     }

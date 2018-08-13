@@ -1,5 +1,13 @@
+/**
+ * Custom made LinkedList for simple paths
+ * @author Alexander Park
+ * @version 1.0
+ * @since 8-12-18
+ */
 public class CustomLinkedList{
-
+    /**
+     * Private internal node class
+     */
     private class Node{
         Node next;
         RoomEntry data;
@@ -28,6 +36,10 @@ public class CustomLinkedList{
         tail = senthead;
     }
 
+    /**
+     * adds Room to path
+     * @param data RoomEntry to be added
+     */
     public void add(RoomEntry data){
         Node temp = new Node();
         temp.setData(data);
@@ -35,6 +47,9 @@ public class CustomLinkedList{
         tail = temp;
     }
 
+    /**
+     * Prints path of the maze that was captured
+     */
     public void printList(){
         Node current = senthead.getNext();
         while(current!=null){
